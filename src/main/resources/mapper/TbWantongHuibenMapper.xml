@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.booyue.migu.dao.TbWantongHuibenMapper">
+  <resultMap id="BaseResultMap" type="com.booyue.migu.entity.TbWantongHuiben">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="author" jdbcType="VARCHAR" property="author" />
+    <result column="isbn" jdbcType="VARCHAR" property="isbn" />
+    <result column="coverImage" jdbcType="VARCHAR" property="coverimage" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="publisher" jdbcType="VARCHAR" property="publisher" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="createdTime" jdbcType="TIMESTAMP" property="createdtime" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+    <result column="bookCategory" jdbcType="INTEGER" property="bookcategory" />
+    <result column="bookId" jdbcType="INTEGER" property="bookid" />
+    <result column="thumbnailUrl" jdbcType="VARCHAR" property="thumbnailurl" />
+    <result column="bookLabels" jdbcType="VARCHAR" property="booklabels" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, author, isbn, coverImage, `name`, publisher, description, createdTime, `state`, 
+    bookCategory, bookId, thumbnailUrl, bookLabels
+  </sql>
+  <select id="selectByExample" parameterType="com.booyue.migu.entity.TbWantongHuibenExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from tb_wantong_huiben
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_wantong_huiben
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tb_wantong_huiben
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.booyue.migu.entity.TbWantongHuibenExample">
+    delete from tb_wantong_huiben
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.booyue.migu.entity.TbWantongHuiben" useGeneratedKeys="true">
+    insert into tb_wantong_huiben (author, isbn, coverImage, 
+      `name`, publisher, description, 
+      createdTime, `state`, bookCategory, 
+      bookId, thumbnailUrl, bookLabels
+      )
+    values (#{author,jdbcType=VARCHAR}, #{isbn,jdbcType=VARCHAR}, #{coverimage,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{publisher,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
+      #{createdtime,jdbcType=TIMESTAMP}, #{state,jdbcType=INTEGER}, #{bookcategory,jdbcType=INTEGER}, 
+      #{bookid,jdbcType=INTEGER}, #{thumbnailurl,jdbcType=VARCHAR}, #{booklabels,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.booyue.migu.entity.TbWantongHuiben" useGeneratedKeys="true">
+    insert into tb_wantong_huiben
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="author != null">
+        author,
+      </if>
+      <if test="isbn != null">
+        isbn,
+      </if>
+      <if test="coverimage != null">
+        coverImage,
+      </if>
+      <if test="name != null">
+        `name`,
+      </if>
+      <if test="publisher != null">
+        publisher,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+      <if test="createdtime != null">
+        createdTime,
+      </if>
+      <if test="state != null">
+        `state`,
+      </if>
+      <if test="bookcategory != null">
+        bookCategory,
+      </if>
+      <if test="bookid != null">
+        bookId,
+      </if>
+      <if test="thumbnailurl != null">
+        thumbnailUrl,
+      </if>
+      <if test="booklabels != null">
+        bookLabels,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="author != null">
+        #{author,jdbcType=VARCHAR},
+      </if>
+      <if test="isbn != null">
+        #{isbn,jdbcType=VARCHAR},
+      </if>
+      <if test="coverimage != null">
+        #{coverimage,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="publisher != null">
+        #{publisher,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="createdtime != null">
+        #{createdtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="bookcategory != null">
+        #{bookcategory,jdbcType=INTEGER},
+      </if>
+      <if test="bookid != null">
+        #{bookid,jdbcType=INTEGER},
+      </if>
+      <if test="thumbnailurl != null">
+        #{thumbnailurl,jdbcType=VARCHAR},
+      </if>
+      <if test="booklabels != null">
+        #{booklabels,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.booyue.migu.entity.TbWantongHuibenExample" resultType="java.lang.Long">
+    select count(*) from tb_wantong_huiben
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update tb_wantong_huiben
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.author != null">
+        author = #{record.author,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isbn != null">
+        isbn = #{record.isbn,jdbcType=VARCHAR},
+      </if>
+      <if test="record.coverimage != null">
+        coverImage = #{record.coverimage,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null">
+        `name` = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.publisher != null">
+        publisher = #{record.publisher,jdbcType=VARCHAR},
+      </if>
+      <if test="record.description != null">
+        description = #{record.description,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createdtime != null">
+        createdTime = #{record.createdtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.state != null">
+        `state` = #{record.state,jdbcType=INTEGER},
+      </if>
+      <if test="record.bookcategory != null">
+        bookCategory = #{record.bookcategory,jdbcType=INTEGER},
+      </if>
+      <if test="record.bookid != null">
+        bookId = #{record.bookid,jdbcType=INTEGER},
+      </if>
+      <if test="record.thumbnailurl != null">
+        thumbnailUrl = #{record.thumbnailurl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.booklabels != null">
+        bookLabels = #{record.booklabels,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update tb_wantong_huiben
+    set id = #{record.id,jdbcType=INTEGER},
+      author = #{record.author,jdbcType=VARCHAR},
+      isbn = #{record.isbn,jdbcType=VARCHAR},
+      coverImage = #{record.coverimage,jdbcType=VARCHAR},
+      `name` = #{record.name,jdbcType=VARCHAR},
+      publisher = #{record.publisher,jdbcType=VARCHAR},
+      description = #{record.description,jdbcType=VARCHAR},
+      createdTime = #{record.createdtime,jdbcType=TIMESTAMP},
+      `state` = #{record.state,jdbcType=INTEGER},
+      bookCategory = #{record.bookcategory,jdbcType=INTEGER},
+      bookId = #{record.bookid,jdbcType=INTEGER},
+      thumbnailUrl = #{record.thumbnailurl,jdbcType=VARCHAR},
+      bookLabels = #{record.booklabels,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.booyue.migu.entity.TbWantongHuiben">
+    update tb_wantong_huiben
+    <set>
+      <if test="author != null">
+        author = #{author,jdbcType=VARCHAR},
+      </if>
+      <if test="isbn != null">
+        isbn = #{isbn,jdbcType=VARCHAR},
+      </if>
+      <if test="coverimage != null">
+        coverImage = #{coverimage,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="publisher != null">
+        publisher = #{publisher,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="createdtime != null">
+        createdTime = #{createdtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null">
+        `state` = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="bookcategory != null">
+        bookCategory = #{bookcategory,jdbcType=INTEGER},
+      </if>
+      <if test="bookid != null">
+        bookId = #{bookid,jdbcType=INTEGER},
+      </if>
+      <if test="thumbnailurl != null">
+        thumbnailUrl = #{thumbnailurl,jdbcType=VARCHAR},
+      </if>
+      <if test="booklabels != null">
+        bookLabels = #{booklabels,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.booyue.migu.entity.TbWantongHuiben">
+    update tb_wantong_huiben
+    set author = #{author,jdbcType=VARCHAR},
+      isbn = #{isbn,jdbcType=VARCHAR},
+      coverImage = #{coverimage,jdbcType=VARCHAR},
+      `name` = #{name,jdbcType=VARCHAR},
+      publisher = #{publisher,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      createdTime = #{createdtime,jdbcType=TIMESTAMP},
+      `state` = #{state,jdbcType=INTEGER},
+      bookCategory = #{bookcategory,jdbcType=INTEGER},
+      bookId = #{bookid,jdbcType=INTEGER},
+      thumbnailUrl = #{thumbnailurl,jdbcType=VARCHAR},
+      bookLabels = #{booklabels,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

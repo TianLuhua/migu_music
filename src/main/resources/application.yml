@@ -1,0 +1,21 @@
+server:
+  port: 9000
+
+spring:
+  application:
+    name: migu_music
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url=jdbc\:mysql\://121.43.105.9\:3306/db_babyting?useUnicode\=true&characterEncoding\=UTF-8&zeroDateTimeBehavior\=convertToNull
+    url: jdbc:mysql://121.43.105.9:3306/migu_music?useUnicode=true&characterEncoding=UTF-8
+    username: root
+    password: Booyue@20100901
+#    url: jdbc:mysql://huohuotu.mysql.rds.aliyuncs.com:3306/db_babyting?useUnicode=true&characterEncoding=UTF-8
+#    username: babygo
+#    password: Boyue123
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+
+

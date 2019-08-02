@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.booyue.migu.dao.SpecialExtendMapper">
+  <resultMap id="BaseResultMap" type="com.booyue.migu.entity.TbSspecialExtend">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="specialId" jdbcType="INTEGER" property="specialid" />
+    <result column="allage" jdbcType="VARCHAR" property="allage" />
+    <result column="allearly" jdbcType="VARCHAR" property="allearly" />
+    <result column="allscene" jdbcType="VARCHAR" property="allscene" />
+    <result column="allclass" jdbcType="VARCHAR" property="allclass" />
+    <result column="extend1" jdbcType="INTEGER" property="extend1" />
+    <result column="extend2" jdbcType="VARCHAR" property="extend2" />
+    <result column="extend3" jdbcType="VARCHAR" property="extend3" />
+    <result column="brief" jdbcType="VARCHAR" property="brief" />
+    <result column="paylinke" jdbcType="VARCHAR" property="paylinke" />
+    <result column="bouban_score" jdbcType="VARCHAR" property="boubanScore" />
+    <result column="borrow_num" jdbcType="VARCHAR" property="borrowNum" />
+    <result column="isbn" jdbcType="VARCHAR" property="isbn" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, specialId, allage, allearly, allscene, allclass, extend1, extend2, extend3, brief, 
+    paylinke, bouban_score, borrow_num, isbn
+  </sql>
+  <select id="selectByExample" parameterType="com.booyue.migu.entity.TbSspecialExtendExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from tb_sspecial_extend
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_sspecial_extend
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tb_sspecial_extend
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.booyue.migu.entity.TbSspecialExtendExample">
+    delete from tb_sspecial_extend
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.booyue.migu.entity.TbSspecialExtend" useGeneratedKeys="true">
+    insert into tb_sspecial_extend (specialId, allage, allearly, 
+      allscene, allclass, extend1, 
+      extend2, extend3, brief, 
+      paylinke, bouban_score, borrow_num, 
+      isbn)
+    values (#{specialid,jdbcType=INTEGER}, #{allage,jdbcType=VARCHAR}, #{allearly,jdbcType=VARCHAR}, 
+      #{allscene,jdbcType=VARCHAR}, #{allclass,jdbcType=VARCHAR}, #{extend1,jdbcType=INTEGER}, 
+      #{extend2,jdbcType=VARCHAR}, #{extend3,jdbcType=VARCHAR}, #{brief,jdbcType=VARCHAR}, 
+      #{paylinke,jdbcType=VARCHAR}, #{boubanScore,jdbcType=VARCHAR}, #{borrowNum,jdbcType=VARCHAR}, 
+      #{isbn,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.booyue.migu.entity.TbSspecialExtend" useGeneratedKeys="true">
+    insert into tb_sspecial_extend
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="specialid != null">
+        specialId,
+      </if>
+      <if test="allage != null">
+        allage,
+      </if>
+      <if test="allearly != null">
+        allearly,
+      </if>
+      <if test="allscene != null">
+        allscene,
+      </if>
+      <if test="allclass != null">
+        allclass,
+      </if>
+      <if test="extend1 != null">
+        extend1,
+      </if>
+      <if test="extend2 != null">
+        extend2,
+      </if>
+      <if test="extend3 != null">
+        extend3,
+      </if>
+      <if test="brief != null">
+        brief,
+      </if>
+      <if test="paylinke != null">
+        paylinke,
+      </if>
+      <if test="boubanScore != null">
+        bouban_score,
+      </if>
+      <if test="borrowNum != null">
+        borrow_num,
+      </if>
+      <if test="isbn != null">
+        isbn,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="specialid != null">
+        #{specialid,jdbcType=INTEGER},
+      </if>
+      <if test="allage != null">
+        #{allage,jdbcType=VARCHAR},
+      </if>
+      <if test="allearly != null">
+        #{allearly,jdbcType=VARCHAR},
+      </if>
+      <if test="allscene != null">
+        #{allscene,jdbcType=VARCHAR},
+      </if>
+      <if test="allclass != null">
+        #{allclass,jdbcType=VARCHAR},
+      </if>
+      <if test="extend1 != null">
+        #{extend1,jdbcType=INTEGER},
+      </if>
+      <if test="extend2 != null">
+        #{extend2,jdbcType=VARCHAR},
+      </if>
+      <if test="extend3 != null">
+        #{extend3,jdbcType=VARCHAR},
+      </if>
+      <if test="brief != null">
+        #{brief,jdbcType=VARCHAR},
+      </if>
+      <if test="paylinke != null">
+        #{paylinke,jdbcType=VARCHAR},
+      </if>
+      <if test="boubanScore != null">
+        #{boubanScore,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowNum != null">
+        #{borrowNum,jdbcType=VARCHAR},
+      </if>
+      <if test="isbn != null">
+        #{isbn,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.booyue.migu.entity.TbSspecialExtendExample" resultType="java.lang.Long">
+    select count(*) from tb_sspecial_extend
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update tb_sspecial_extend
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.specialid != null">
+        specialId = #{record.specialid,jdbcType=INTEGER},
+      </if>
+      <if test="record.allage != null">
+        allage = #{record.allage,jdbcType=VARCHAR},
+      </if>
+      <if test="record.allearly != null">
+        allearly = #{record.allearly,jdbcType=VARCHAR},
+      </if>
+      <if test="record.allscene != null">
+        allscene = #{record.allscene,jdbcType=VARCHAR},
+      </if>
+      <if test="record.allclass != null">
+        allclass = #{record.allclass,jdbcType=VARCHAR},
+      </if>
+      <if test="record.extend1 != null">
+        extend1 = #{record.extend1,jdbcType=INTEGER},
+      </if>
+      <if test="record.extend2 != null">
+        extend2 = #{record.extend2,jdbcType=VARCHAR},
+      </if>
+      <if test="record.extend3 != null">
+        extend3 = #{record.extend3,jdbcType=VARCHAR},
+      </if>
+      <if test="record.brief != null">
+        brief = #{record.brief,jdbcType=VARCHAR},
+      </if>
+      <if test="record.paylinke != null">
+        paylinke = #{record.paylinke,jdbcType=VARCHAR},
+      </if>
+      <if test="record.boubanScore != null">
+        bouban_score = #{record.boubanScore,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowNum != null">
+        borrow_num = #{record.borrowNum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isbn != null">
+        isbn = #{record.isbn,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update tb_sspecial_extend
+    set id = #{record.id,jdbcType=INTEGER},
+      specialId = #{record.specialid,jdbcType=INTEGER},
+      allage = #{record.allage,jdbcType=VARCHAR},
+      allearly = #{record.allearly,jdbcType=VARCHAR},
+      allscene = #{record.allscene,jdbcType=VARCHAR},
+      allclass = #{record.allclass,jdbcType=VARCHAR},
+      extend1 = #{record.extend1,jdbcType=INTEGER},
+      extend2 = #{record.extend2,jdbcType=VARCHAR},
+      extend3 = #{record.extend3,jdbcType=VARCHAR},
+      brief = #{record.brief,jdbcType=VARCHAR},
+      paylinke = #{record.paylinke,jdbcType=VARCHAR},
+      bouban_score = #{record.boubanScore,jdbcType=VARCHAR},
+      borrow_num = #{record.borrowNum,jdbcType=VARCHAR},
+      isbn = #{record.isbn,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.booyue.migu.entity.TbSspecialExtend">
+    update tb_sspecial_extend
+    <set>
+      <if test="specialid != null">
+        specialId = #{specialid,jdbcType=INTEGER},
+      </if>
+      <if test="allage != null">
+        allage = #{allage,jdbcType=VARCHAR},
+      </if>
+      <if test="allearly != null">
+        allearly = #{allearly,jdbcType=VARCHAR},
+      </if>
+      <if test="allscene != null">
+        allscene = #{allscene,jdbcType=VARCHAR},
+      </if>
+      <if test="allclass != null">
+        allclass = #{allclass,jdbcType=VARCHAR},
+      </if>
+      <if test="extend1 != null">
+        extend1 = #{extend1,jdbcType=INTEGER},
+      </if>
+      <if test="extend2 != null">
+        extend2 = #{extend2,jdbcType=VARCHAR},
+      </if>
+      <if test="extend3 != null">
+        extend3 = #{extend3,jdbcType=VARCHAR},
+      </if>
+      <if test="brief != null">
+        brief = #{brief,jdbcType=VARCHAR},
+      </if>
+      <if test="paylinke != null">
+        paylinke = #{paylinke,jdbcType=VARCHAR},
+      </if>
+      <if test="boubanScore != null">
+        bouban_score = #{boubanScore,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowNum != null">
+        borrow_num = #{borrowNum,jdbcType=VARCHAR},
+      </if>
+      <if test="isbn != null">
+        isbn = #{isbn,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.booyue.migu.entity.TbSspecialExtend">
+    update tb_sspecial_extend
+    set specialId = #{specialid,jdbcType=INTEGER},
+      allage = #{allage,jdbcType=VARCHAR},
+      allearly = #{allearly,jdbcType=VARCHAR},
+      allscene = #{allscene,jdbcType=VARCHAR},
+      allclass = #{allclass,jdbcType=VARCHAR},
+      extend1 = #{extend1,jdbcType=INTEGER},
+      extend2 = #{extend2,jdbcType=VARCHAR},
+      extend3 = #{extend3,jdbcType=VARCHAR},
+      brief = #{brief,jdbcType=VARCHAR},
+      paylinke = #{paylinke,jdbcType=VARCHAR},
+      bouban_score = #{boubanScore,jdbcType=VARCHAR},
+      borrow_num = #{borrowNum,jdbcType=VARCHAR},
+      isbn = #{isbn,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

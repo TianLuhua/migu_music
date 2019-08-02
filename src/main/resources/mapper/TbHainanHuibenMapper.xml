@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.booyue.migu.dao.TbHainanHuibenMapper">
+  <resultMap id="BaseResultMap" type="com.booyue.migu.entity.TbHainanHuiben">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="huiben_name" jdbcType="VARCHAR" property="huibenName" />
+    <result column="isbn" jdbcType="VARCHAR" property="isbn" />
+    <result column="publisher_name" jdbcType="VARCHAR" property="publisherName" />
+    <result column="pingjia_count" jdbcType="VARCHAR" property="pingjiaCount" />
+    <result column="detail_url" jdbcType="VARCHAR" property="detailUrl" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="jd_price" jdbcType="VARCHAR" property="jdPrice" />
+    <result column="jd_comment" jdbcType="VARCHAR" property="jdComment" />
+    <result column="introduce" jdbcType="VARCHAR" property="introduce" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, huiben_name, isbn, publisher_name, pingjia_count, detail_url, url, jd_price, 
+    jd_comment, introduce
+  </sql>
+  <select id="selectByExample" parameterType="com.booyue.migu.entity.TbHainanHuibenExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from tb_hainan_huiben
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_hainan_huiben
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tb_hainan_huiben
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.booyue.migu.entity.TbHainanHuibenExample">
+    delete from tb_hainan_huiben
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.booyue.migu.entity.TbHainanHuiben" useGeneratedKeys="true">
+    insert into tb_hainan_huiben (huiben_name, isbn, publisher_name, 
+      pingjia_count, detail_url, url, 
+      jd_price, jd_comment, introduce
+      )
+    values (#{huibenName,jdbcType=VARCHAR}, #{isbn,jdbcType=VARCHAR}, #{publisherName,jdbcType=VARCHAR}, 
+      #{pingjiaCount,jdbcType=VARCHAR}, #{detailUrl,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, 
+      #{jdPrice,jdbcType=DECIMAL}, #{jdComment,jdbcType=VARCHAR}, #{introduce,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.booyue.migu.entity.TbHainanHuiben" useGeneratedKeys="true">
+    insert into tb_hainan_huiben
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="huibenName != null">
+        huiben_name,
+      </if>
+      <if test="isbn != null">
+        isbn,
+      </if>
+      <if test="publisherName != null">
+        publisher_name,
+      </if>
+      <if test="pingjiaCount != null">
+        pingjia_count,
+      </if>
+      <if test="detailUrl != null">
+        detail_url,
+      </if>
+      <if test="url != null">
+        url,
+      </if>
+      <if test="jdPrice != null">
+        jd_price,
+      </if>
+      <if test="jdComment != null">
+        jd_comment,
+      </if>
+      <if test="introduce != null">
+        introduce,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="huibenName != null">
+        #{huibenName,jdbcType=VARCHAR},
+      </if>
+      <if test="isbn != null">
+        #{isbn,jdbcType=VARCHAR},
+      </if>
+      <if test="publisherName != null">
+        #{publisherName,jdbcType=VARCHAR},
+      </if>
+      <if test="pingjiaCount != null">
+        #{pingjiaCount,jdbcType=VARCHAR},
+      </if>
+      <if test="detailUrl != null">
+        #{detailUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="jdPrice != null">
+        #{jdPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="jdComment != null">
+        #{jdComment,jdbcType=VARCHAR},
+      </if>
+      <if test="introduce != null">
+        #{introduce,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.booyue.migu.entity.TbHainanHuibenExample" resultType="java.lang.Long">
+    select count(*) from tb_hainan_huiben
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update tb_hainan_huiben
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.huibenName != null">
+        huiben_name = #{record.huibenName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isbn != null">
+        isbn = #{record.isbn,jdbcType=VARCHAR},
+      </if>
+      <if test="record.publisherName != null">
+        publisher_name = #{record.publisherName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pingjiaCount != null">
+        pingjia_count = #{record.pingjiaCount,jdbcType=VARCHAR},
+      </if>
+      <if test="record.detailUrl != null">
+        detail_url = #{record.detailUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.url != null">
+        url = #{record.url,jdbcType=VARCHAR},
+      </if>
+      <if test="record.jdPrice != null">
+        jd_price = #{record.jdPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.jdComment != null">
+        jd_comment = #{record.jdComment,jdbcType=VARCHAR},
+      </if>
+      <if test="record.introduce != null">
+        introduce = #{record.introduce,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update tb_hainan_huiben
+    set id = #{record.id,jdbcType=INTEGER},
+      huiben_name = #{record.huibenName,jdbcType=VARCHAR},
+      isbn = #{record.isbn,jdbcType=VARCHAR},
+      publisher_name = #{record.publisherName,jdbcType=VARCHAR},
+      pingjia_count = #{record.pingjiaCount,jdbcType=VARCHAR},
+      detail_url = #{record.detailUrl,jdbcType=VARCHAR},
+      url = #{record.url,jdbcType=VARCHAR},
+      jd_price = #{record.jdPrice,jdbcType=VARCHAR},
+      jd_comment = #{record.jdComment,jdbcType=VARCHAR},
+      introduce = #{record.introduce,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.booyue.migu.entity.TbHainanHuiben">
+    update tb_hainan_huiben
+    <set>
+      <if test="huibenName != null">
+        huiben_name = #{huibenName,jdbcType=VARCHAR},
+      </if>
+      <if test="isbn != null">
+        isbn = #{isbn,jdbcType=VARCHAR},
+      </if>
+      <if test="publisherName != null">
+        publisher_name = #{publisherName,jdbcType=VARCHAR},
+      </if>
+      <if test="pingjiaCount != null">
+        pingjia_count = #{pingjiaCount,jdbcType=VARCHAR},
+      </if>
+      <if test="detailUrl != null">
+        detail_url = #{detailUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="jdPrice != null">
+        jd_price = #{jdPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="jdComment != null">
+        jd_comment = #{jdComment,jdbcType=VARCHAR},
+      </if>
+      <if test="introduce != null">
+        introduce = #{introduce,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.booyue.migu.entity.TbHainanHuiben">
+    update tb_hainan_huiben
+    set huiben_name = #{huibenName,jdbcType=VARCHAR},
+      isbn = #{isbn,jdbcType=VARCHAR},
+      publisher_name = #{publisherName,jdbcType=VARCHAR},
+      pingjia_count = #{pingjiaCount,jdbcType=VARCHAR},
+      detail_url = #{detailUrl,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      jd_price = #{jdPrice,jdbcType=VARCHAR},
+      jd_comment = #{jdComment,jdbcType=VARCHAR},
+      introduce = #{introduce,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

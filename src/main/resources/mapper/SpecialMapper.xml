@@ -1,0 +1,722 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.booyue.migu.dao.SpecialMapper">
+  <resultMap id="BaseResultMap" type="com.booyue.migu.entity.TbSspecial">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="sid" jdbcType="INTEGER" property="sid" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="name_en" jdbcType="VARCHAR" property="nameEn" />
+    <result column="reader" jdbcType="VARCHAR" property="reader" />
+    <result column="isrc" jdbcType="CHAR" property="isrc" />
+    <result column="area" jdbcType="CHAR" property="area" />
+    <result column="publishtime" jdbcType="DATE" property="publishtime" />
+    <result column="language" jdbcType="CHAR" property="language" />
+    <result column="printcompany" jdbcType="CHAR" property="printcompany" />
+    <result column="fileform" jdbcType="CHAR" property="fileform" />
+    <result column="publishcompany" jdbcType="CHAR" property="publishcompany" />
+    <result column="quality" jdbcType="CHAR" property="quality" />
+    <result column="classid" jdbcType="INTEGER" property="classid" />
+    <result column="classid2" jdbcType="INTEGER" property="classid2" />
+    <result column="agesection_id" jdbcType="INTEGER" property="agesectionId" />
+    <result column="timelength" jdbcType="INTEGER" property="timelength" />
+    <result column="status" jdbcType="BIT" property="status" />
+    <result column="coverpath" jdbcType="VARCHAR" property="coverpath" />
+    <result column="tag" jdbcType="VARCHAR" property="tag" />
+    <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="createuid" jdbcType="INTEGER" property="createuid" />
+    <result column="edittime" jdbcType="TIMESTAMP" property="edittime" />
+    <result column="edituid" jdbcType="INTEGER" property="edituid" />
+    <result column="compose" jdbcType="VARCHAR" property="compose" />
+    <result column="words" jdbcType="VARCHAR" property="words" />
+    <result column="comment" jdbcType="INTEGER" property="comment" />
+    <result column="collect" jdbcType="INTEGER" property="collect" />
+    <result column="browse" jdbcType="INTEGER" property="browse" />
+    <result column="download" jdbcType="INTEGER" property="download" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.booyue.migu.entity.TbSspecial">
+    <result column="description" jdbcType="LONGVARCHAR" property="description" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, sid, `name`, name_en, reader, isrc, area, publishtime, `language`, printcompany, 
+    fileform, publishcompany, quality, classid, classid2, agesection_id, timelength, 
+    `status`, coverpath, tag, createtime, createuid, edittime, edituid, compose, words, 
+    `comment`, `collect`, `browse`, download
+  </sql>
+  <sql id="Blob_Column_List">
+    description
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="com.booyue.migu.entity.TbSspecialExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from tb_sspecial
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="com.booyue.migu.entity.TbSspecialExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from tb_sspecial
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from tb_sspecial
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tb_sspecial
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.booyue.migu.entity.TbSspecialExample">
+    delete from tb_sspecial
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.booyue.migu.entity.TbSspecial" useGeneratedKeys="true">
+    insert into tb_sspecial (sid, `name`, name_en, 
+      reader, isrc, area, publishtime, 
+      `language`, printcompany, fileform, 
+      publishcompany, quality, classid, 
+      classid2, agesection_id, timelength, 
+      `status`, coverpath, tag, 
+      createtime, createuid, edittime, 
+      edituid, compose, words, 
+      `comment`, `collect`, `browse`, 
+      download, description)
+    values (#{sid,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{nameEn,jdbcType=VARCHAR}, 
+      #{reader,jdbcType=VARCHAR}, #{isrc,jdbcType=CHAR}, #{area,jdbcType=CHAR}, #{publishtime,jdbcType=DATE}, 
+      #{language,jdbcType=CHAR}, #{printcompany,jdbcType=CHAR}, #{fileform,jdbcType=CHAR}, 
+      #{publishcompany,jdbcType=CHAR}, #{quality,jdbcType=CHAR}, #{classid,jdbcType=INTEGER}, 
+      #{classid2,jdbcType=INTEGER}, #{agesectionId,jdbcType=INTEGER}, #{timelength,jdbcType=INTEGER}, 
+      #{status,jdbcType=BIT}, #{coverpath,jdbcType=VARCHAR}, #{tag,jdbcType=VARCHAR}, 
+      #{createtime,jdbcType=TIMESTAMP}, #{createuid,jdbcType=INTEGER}, #{edittime,jdbcType=TIMESTAMP}, 
+      #{edituid,jdbcType=INTEGER}, #{compose,jdbcType=VARCHAR}, #{words,jdbcType=VARCHAR}, 
+      #{comment,jdbcType=INTEGER}, #{collect,jdbcType=INTEGER}, #{browse,jdbcType=INTEGER}, 
+      #{download,jdbcType=INTEGER}, #{description,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.booyue.migu.entity.TbSspecial" useGeneratedKeys="true">
+    insert into tb_sspecial
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="sid != null">
+        sid,
+      </if>
+      <if test="name != null">
+        `name`,
+      </if>
+      <if test="nameEn != null">
+        name_en,
+      </if>
+      <if test="reader != null">
+        reader,
+      </if>
+      <if test="isrc != null">
+        isrc,
+      </if>
+      <if test="area != null">
+        area,
+      </if>
+      <if test="publishtime != null">
+        publishtime,
+      </if>
+      <if test="language != null">
+        `language`,
+      </if>
+      <if test="printcompany != null">
+        printcompany,
+      </if>
+      <if test="fileform != null">
+        fileform,
+      </if>
+      <if test="publishcompany != null">
+        publishcompany,
+      </if>
+      <if test="quality != null">
+        quality,
+      </if>
+      <if test="classid != null">
+        classid,
+      </if>
+      <if test="classid2 != null">
+        classid2,
+      </if>
+      <if test="agesectionId != null">
+        agesection_id,
+      </if>
+      <if test="timelength != null">
+        timelength,
+      </if>
+      <if test="status != null">
+        `status`,
+      </if>
+      <if test="coverpath != null">
+        coverpath,
+      </if>
+      <if test="tag != null">
+        tag,
+      </if>
+      <if test="createtime != null">
+        createtime,
+      </if>
+      <if test="createuid != null">
+        createuid,
+      </if>
+      <if test="edittime != null">
+        edittime,
+      </if>
+      <if test="edituid != null">
+        edituid,
+      </if>
+      <if test="compose != null">
+        compose,
+      </if>
+      <if test="words != null">
+        words,
+      </if>
+      <if test="comment != null">
+        `comment`,
+      </if>
+      <if test="collect != null">
+        `collect`,
+      </if>
+      <if test="browse != null">
+        `browse`,
+      </if>
+      <if test="download != null">
+        download,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="sid != null">
+        #{sid,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="nameEn != null">
+        #{nameEn,jdbcType=VARCHAR},
+      </if>
+      <if test="reader != null">
+        #{reader,jdbcType=VARCHAR},
+      </if>
+      <if test="isrc != null">
+        #{isrc,jdbcType=CHAR},
+      </if>
+      <if test="area != null">
+        #{area,jdbcType=CHAR},
+      </if>
+      <if test="publishtime != null">
+        #{publishtime,jdbcType=DATE},
+      </if>
+      <if test="language != null">
+        #{language,jdbcType=CHAR},
+      </if>
+      <if test="printcompany != null">
+        #{printcompany,jdbcType=CHAR},
+      </if>
+      <if test="fileform != null">
+        #{fileform,jdbcType=CHAR},
+      </if>
+      <if test="publishcompany != null">
+        #{publishcompany,jdbcType=CHAR},
+      </if>
+      <if test="quality != null">
+        #{quality,jdbcType=CHAR},
+      </if>
+      <if test="classid != null">
+        #{classid,jdbcType=INTEGER},
+      </if>
+      <if test="classid2 != null">
+        #{classid2,jdbcType=INTEGER},
+      </if>
+      <if test="agesectionId != null">
+        #{agesectionId,jdbcType=INTEGER},
+      </if>
+      <if test="timelength != null">
+        #{timelength,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=BIT},
+      </if>
+      <if test="coverpath != null">
+        #{coverpath,jdbcType=VARCHAR},
+      </if>
+      <if test="tag != null">
+        #{tag,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null">
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createuid != null">
+        #{createuid,jdbcType=INTEGER},
+      </if>
+      <if test="edittime != null">
+        #{edittime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="edituid != null">
+        #{edituid,jdbcType=INTEGER},
+      </if>
+      <if test="compose != null">
+        #{compose,jdbcType=VARCHAR},
+      </if>
+      <if test="words != null">
+        #{words,jdbcType=VARCHAR},
+      </if>
+      <if test="comment != null">
+        #{comment,jdbcType=INTEGER},
+      </if>
+      <if test="collect != null">
+        #{collect,jdbcType=INTEGER},
+      </if>
+      <if test="browse != null">
+        #{browse,jdbcType=INTEGER},
+      </if>
+      <if test="download != null">
+        #{download,jdbcType=INTEGER},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.booyue.migu.entity.TbSspecialExample" resultType="java.lang.Long">
+    select count(*) from tb_sspecial
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update tb_sspecial
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.sid != null">
+        sid = #{record.sid,jdbcType=INTEGER},
+      </if>
+      <if test="record.name != null">
+        `name` = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.nameEn != null">
+        name_en = #{record.nameEn,jdbcType=VARCHAR},
+      </if>
+      <if test="record.reader != null">
+        reader = #{record.reader,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isrc != null">
+        isrc = #{record.isrc,jdbcType=CHAR},
+      </if>
+      <if test="record.area != null">
+        area = #{record.area,jdbcType=CHAR},
+      </if>
+      <if test="record.publishtime != null">
+        publishtime = #{record.publishtime,jdbcType=DATE},
+      </if>
+      <if test="record.language != null">
+        `language` = #{record.language,jdbcType=CHAR},
+      </if>
+      <if test="record.printcompany != null">
+        printcompany = #{record.printcompany,jdbcType=CHAR},
+      </if>
+      <if test="record.fileform != null">
+        fileform = #{record.fileform,jdbcType=CHAR},
+      </if>
+      <if test="record.publishcompany != null">
+        publishcompany = #{record.publishcompany,jdbcType=CHAR},
+      </if>
+      <if test="record.quality != null">
+        quality = #{record.quality,jdbcType=CHAR},
+      </if>
+      <if test="record.classid != null">
+        classid = #{record.classid,jdbcType=INTEGER},
+      </if>
+      <if test="record.classid2 != null">
+        classid2 = #{record.classid2,jdbcType=INTEGER},
+      </if>
+      <if test="record.agesectionId != null">
+        agesection_id = #{record.agesectionId,jdbcType=INTEGER},
+      </if>
+      <if test="record.timelength != null">
+        timelength = #{record.timelength,jdbcType=INTEGER},
+      </if>
+      <if test="record.status != null">
+        `status` = #{record.status,jdbcType=BIT},
+      </if>
+      <if test="record.coverpath != null">
+        coverpath = #{record.coverpath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tag != null">
+        tag = #{record.tag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createtime != null">
+        createtime = #{record.createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createuid != null">
+        createuid = #{record.createuid,jdbcType=INTEGER},
+      </if>
+      <if test="record.edittime != null">
+        edittime = #{record.edittime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.edituid != null">
+        edituid = #{record.edituid,jdbcType=INTEGER},
+      </if>
+      <if test="record.compose != null">
+        compose = #{record.compose,jdbcType=VARCHAR},
+      </if>
+      <if test="record.words != null">
+        words = #{record.words,jdbcType=VARCHAR},
+      </if>
+      <if test="record.comment != null">
+        `comment` = #{record.comment,jdbcType=INTEGER},
+      </if>
+      <if test="record.collect != null">
+        `collect` = #{record.collect,jdbcType=INTEGER},
+      </if>
+      <if test="record.browse != null">
+        `browse` = #{record.browse,jdbcType=INTEGER},
+      </if>
+      <if test="record.download != null">
+        download = #{record.download,jdbcType=INTEGER},
+      </if>
+      <if test="record.description != null">
+        description = #{record.description,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update tb_sspecial
+    set id = #{record.id,jdbcType=INTEGER},
+      sid = #{record.sid,jdbcType=INTEGER},
+      `name` = #{record.name,jdbcType=VARCHAR},
+      name_en = #{record.nameEn,jdbcType=VARCHAR},
+      reader = #{record.reader,jdbcType=VARCHAR},
+      isrc = #{record.isrc,jdbcType=CHAR},
+      area = #{record.area,jdbcType=CHAR},
+      publishtime = #{record.publishtime,jdbcType=DATE},
+      `language` = #{record.language,jdbcType=CHAR},
+      printcompany = #{record.printcompany,jdbcType=CHAR},
+      fileform = #{record.fileform,jdbcType=CHAR},
+      publishcompany = #{record.publishcompany,jdbcType=CHAR},
+      quality = #{record.quality,jdbcType=CHAR},
+      classid = #{record.classid,jdbcType=INTEGER},
+      classid2 = #{record.classid2,jdbcType=INTEGER},
+      agesection_id = #{record.agesectionId,jdbcType=INTEGER},
+      timelength = #{record.timelength,jdbcType=INTEGER},
+      `status` = #{record.status,jdbcType=BIT},
+      coverpath = #{record.coverpath,jdbcType=VARCHAR},
+      tag = #{record.tag,jdbcType=VARCHAR},
+      createtime = #{record.createtime,jdbcType=TIMESTAMP},
+      createuid = #{record.createuid,jdbcType=INTEGER},
+      edittime = #{record.edittime,jdbcType=TIMESTAMP},
+      edituid = #{record.edituid,jdbcType=INTEGER},
+      compose = #{record.compose,jdbcType=VARCHAR},
+      words = #{record.words,jdbcType=VARCHAR},
+      `comment` = #{record.comment,jdbcType=INTEGER},
+      `collect` = #{record.collect,jdbcType=INTEGER},
+      `browse` = #{record.browse,jdbcType=INTEGER},
+      download = #{record.download,jdbcType=INTEGER},
+      description = #{record.description,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update tb_sspecial
+    set id = #{record.id,jdbcType=INTEGER},
+      sid = #{record.sid,jdbcType=INTEGER},
+      `name` = #{record.name,jdbcType=VARCHAR},
+      name_en = #{record.nameEn,jdbcType=VARCHAR},
+      reader = #{record.reader,jdbcType=VARCHAR},
+      isrc = #{record.isrc,jdbcType=CHAR},
+      area = #{record.area,jdbcType=CHAR},
+      publishtime = #{record.publishtime,jdbcType=DATE},
+      `language` = #{record.language,jdbcType=CHAR},
+      printcompany = #{record.printcompany,jdbcType=CHAR},
+      fileform = #{record.fileform,jdbcType=CHAR},
+      publishcompany = #{record.publishcompany,jdbcType=CHAR},
+      quality = #{record.quality,jdbcType=CHAR},
+      classid = #{record.classid,jdbcType=INTEGER},
+      classid2 = #{record.classid2,jdbcType=INTEGER},
+      agesection_id = #{record.agesectionId,jdbcType=INTEGER},
+      timelength = #{record.timelength,jdbcType=INTEGER},
+      `status` = #{record.status,jdbcType=BIT},
+      coverpath = #{record.coverpath,jdbcType=VARCHAR},
+      tag = #{record.tag,jdbcType=VARCHAR},
+      createtime = #{record.createtime,jdbcType=TIMESTAMP},
+      createuid = #{record.createuid,jdbcType=INTEGER},
+      edittime = #{record.edittime,jdbcType=TIMESTAMP},
+      edituid = #{record.edituid,jdbcType=INTEGER},
+      compose = #{record.compose,jdbcType=VARCHAR},
+      words = #{record.words,jdbcType=VARCHAR},
+      `comment` = #{record.comment,jdbcType=INTEGER},
+      `collect` = #{record.collect,jdbcType=INTEGER},
+      `browse` = #{record.browse,jdbcType=INTEGER},
+      download = #{record.download,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.booyue.migu.entity.TbSspecial">
+    update tb_sspecial
+    <set>
+      <if test="sid != null">
+        sid = #{sid,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="nameEn != null">
+        name_en = #{nameEn,jdbcType=VARCHAR},
+      </if>
+      <if test="reader != null">
+        reader = #{reader,jdbcType=VARCHAR},
+      </if>
+      <if test="isrc != null">
+        isrc = #{isrc,jdbcType=CHAR},
+      </if>
+      <if test="area != null">
+        area = #{area,jdbcType=CHAR},
+      </if>
+      <if test="publishtime != null">
+        publishtime = #{publishtime,jdbcType=DATE},
+      </if>
+      <if test="language != null">
+        `language` = #{language,jdbcType=CHAR},
+      </if>
+      <if test="printcompany != null">
+        printcompany = #{printcompany,jdbcType=CHAR},
+      </if>
+      <if test="fileform != null">
+        fileform = #{fileform,jdbcType=CHAR},
+      </if>
+      <if test="publishcompany != null">
+        publishcompany = #{publishcompany,jdbcType=CHAR},
+      </if>
+      <if test="quality != null">
+        quality = #{quality,jdbcType=CHAR},
+      </if>
+      <if test="classid != null">
+        classid = #{classid,jdbcType=INTEGER},
+      </if>
+      <if test="classid2 != null">
+        classid2 = #{classid2,jdbcType=INTEGER},
+      </if>
+      <if test="agesectionId != null">
+        agesection_id = #{agesectionId,jdbcType=INTEGER},
+      </if>
+      <if test="timelength != null">
+        timelength = #{timelength,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        `status` = #{status,jdbcType=BIT},
+      </if>
+      <if test="coverpath != null">
+        coverpath = #{coverpath,jdbcType=VARCHAR},
+      </if>
+      <if test="tag != null">
+        tag = #{tag,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null">
+        createtime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createuid != null">
+        createuid = #{createuid,jdbcType=INTEGER},
+      </if>
+      <if test="edittime != null">
+        edittime = #{edittime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="edituid != null">
+        edituid = #{edituid,jdbcType=INTEGER},
+      </if>
+      <if test="compose != null">
+        compose = #{compose,jdbcType=VARCHAR},
+      </if>
+      <if test="words != null">
+        words = #{words,jdbcType=VARCHAR},
+      </if>
+      <if test="comment != null">
+        `comment` = #{comment,jdbcType=INTEGER},
+      </if>
+      <if test="collect != null">
+        `collect` = #{collect,jdbcType=INTEGER},
+      </if>
+      <if test="browse != null">
+        `browse` = #{browse,jdbcType=INTEGER},
+      </if>
+      <if test="download != null">
+        download = #{download,jdbcType=INTEGER},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.booyue.migu.entity.TbSspecial">
+    update tb_sspecial
+    set sid = #{sid,jdbcType=INTEGER},
+      `name` = #{name,jdbcType=VARCHAR},
+      name_en = #{nameEn,jdbcType=VARCHAR},
+      reader = #{reader,jdbcType=VARCHAR},
+      isrc = #{isrc,jdbcType=CHAR},
+      area = #{area,jdbcType=CHAR},
+      publishtime = #{publishtime,jdbcType=DATE},
+      `language` = #{language,jdbcType=CHAR},
+      printcompany = #{printcompany,jdbcType=CHAR},
+      fileform = #{fileform,jdbcType=CHAR},
+      publishcompany = #{publishcompany,jdbcType=CHAR},
+      quality = #{quality,jdbcType=CHAR},
+      classid = #{classid,jdbcType=INTEGER},
+      classid2 = #{classid2,jdbcType=INTEGER},
+      agesection_id = #{agesectionId,jdbcType=INTEGER},
+      timelength = #{timelength,jdbcType=INTEGER},
+      `status` = #{status,jdbcType=BIT},
+      coverpath = #{coverpath,jdbcType=VARCHAR},
+      tag = #{tag,jdbcType=VARCHAR},
+      createtime = #{createtime,jdbcType=TIMESTAMP},
+      createuid = #{createuid,jdbcType=INTEGER},
+      edittime = #{edittime,jdbcType=TIMESTAMP},
+      edituid = #{edituid,jdbcType=INTEGER},
+      compose = #{compose,jdbcType=VARCHAR},
+      words = #{words,jdbcType=VARCHAR},
+      `comment` = #{comment,jdbcType=INTEGER},
+      `collect` = #{collect,jdbcType=INTEGER},
+      `browse` = #{browse,jdbcType=INTEGER},
+      download = #{download,jdbcType=INTEGER},
+      description = #{description,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.booyue.migu.entity.TbSspecial">
+    update tb_sspecial
+    set sid = #{sid,jdbcType=INTEGER},
+      `name` = #{name,jdbcType=VARCHAR},
+      name_en = #{nameEn,jdbcType=VARCHAR},
+      reader = #{reader,jdbcType=VARCHAR},
+      isrc = #{isrc,jdbcType=CHAR},
+      area = #{area,jdbcType=CHAR},
+      publishtime = #{publishtime,jdbcType=DATE},
+      `language` = #{language,jdbcType=CHAR},
+      printcompany = #{printcompany,jdbcType=CHAR},
+      fileform = #{fileform,jdbcType=CHAR},
+      publishcompany = #{publishcompany,jdbcType=CHAR},
+      quality = #{quality,jdbcType=CHAR},
+      classid = #{classid,jdbcType=INTEGER},
+      classid2 = #{classid2,jdbcType=INTEGER},
+      agesection_id = #{agesectionId,jdbcType=INTEGER},
+      timelength = #{timelength,jdbcType=INTEGER},
+      `status` = #{status,jdbcType=BIT},
+      coverpath = #{coverpath,jdbcType=VARCHAR},
+      tag = #{tag,jdbcType=VARCHAR},
+      createtime = #{createtime,jdbcType=TIMESTAMP},
+      createuid = #{createuid,jdbcType=INTEGER},
+      edittime = #{edittime,jdbcType=TIMESTAMP},
+      edituid = #{edituid,jdbcType=INTEGER},
+      compose = #{compose,jdbcType=VARCHAR},
+      words = #{words,jdbcType=VARCHAR},
+      `comment` = #{comment,jdbcType=INTEGER},
+      `collect` = #{collect,jdbcType=INTEGER},
+      `browse` = #{browse,jdbcType=INTEGER},
+      download = #{download,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
