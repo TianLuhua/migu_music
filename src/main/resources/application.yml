@@ -8,7 +8,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
 #    url=jdbc\:mysql\://121.43.105.9\:3306/db_babyting?useUnicode\=true&characterEncoding\=UTF-8&zeroDateTimeBehavior\=convertToNull
-    url: jdbc:mysql://121.43.105.9:3306/migu_music?useUnicode=true&characterEncoding=UTF-8
+#    url: jdbc:mysql://121.43.105.9:3306/migu_music?useUnicode=true&characterEncoding=UTF-8
+    url: jdbc:mysql://121.43.105.9:3306/db_spider?useUnicode=true&characterEncoding=UTF-8
     username: root
     password: Booyue@20100901
 #    url: jdbc:mysql://huohuotu.mysql.rds.aliyuncs.com:3306/db_babyting?useUnicode=true&characterEncoding=UTF-8

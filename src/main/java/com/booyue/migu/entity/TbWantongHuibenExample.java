@@ -13,7 +13,7 @@ public class TbWantongHuibenExample {
 
     private Integer limit;
 
-    private Long offset;
+    private Integer offset;
 
     public TbWantongHuibenExample() {
         oredCriteria = new ArrayList<Criteria>();
@@ -76,11 +76,11 @@ public class TbWantongHuibenExample {
         return limit;
     }
 
-    public void setOffset(Long offset) {
+    public void setOffset(Integer offset) {
         this.offset = offset;
     }
 
-    public Long getOffset() {
+    public Integer getOffset() {
         return offset;
     }
 

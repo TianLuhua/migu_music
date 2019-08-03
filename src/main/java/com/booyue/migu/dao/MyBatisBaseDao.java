@@ -13,7 +13,7 @@ import java.util.List;
  */
 public interface MyBatisBaseDao<Model, PK extends Serializable, E> {
 
-    long countByExample(E example);
+    int countByExample(E example);
 
     int deleteByExample(E example);
 

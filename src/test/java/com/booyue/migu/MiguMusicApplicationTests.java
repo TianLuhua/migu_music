@@ -1,5 +1,6 @@
 package com.booyue.migu;
 
+import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSONObject;
 import com.booyue.migu.dao.*;
 import com.booyue.migu.entity.*;
@@ -21,6 +22,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
@@ -301,170 +303,306 @@ public class MiguMusicApplicationTests {
 
     @Test
     public void getMoreInformationFromDoubanByIsbn() {
+        TbWantongHuibenExample wantongHuibenExample = new TbWantongHuibenExample();
+        wantongHuibenExample.createCriteria().andIsbnIsNotNull().andIsbnNotEqualTo("0000000000000");
+        int count = tbWantongHuibenMapper.countByExample(wantongHuibenExample);
+        int pageSize = 10;
+        int pageIndex = (int) Math.ceil(count / 100);
+        wantongHuibenExample.setLimit(pageSize);
+        wantongHuibenExample.setOffset(0);
+        List<TbWantongHuiben> wts = tbWantongHuibenMapper.selectByExample(wantongHuibenExample);
         System.getProperties().setProperty("webdriver.chrome.driver", "E:\\chromedriver\\chromedriver_x64.exe");
-        String url = "https://book.douban.com/subject/27608687/";
-        WebDriver webDriver = new ChromeDriver();
-        webDriver.get(url);
-        //书名
-        String bookName = webDriver.findElement(By.xpath("//*[@id=\"wrapper\"]/h1/span")).getText();
-        String socre = webDriver.findElement(By.xpath("//*[@id=\"interest_sectl\"]/div/div[2]/strong")).getText();
-        String number = webDriver.findElement(By.xpath("//*[@id=\"interest_sectl\"]/div/div[2]/div/div[2]/span/a/span")).getText();
-        String star_5 = webDriver.findElement(By.xpath("//*[@id=\"interest_sectl\"]/div/span[2]")).getText();
-        String star_4 = webDriver.findElement(By.xpath("//*[@id=\"interest_sectl\"]/div/span[4]")).getText();
-        String star_3 = webDriver.findElement(By.xpath("//*[@id=\"interest_sectl\"]/div/span[6]")).getText();
-        String star_2 = webDriver.findElement(By.xpath("//*[@id=\"interest_sectl\"]/div/span[8]")).getText();
-        String star_1 = webDriver.findElement(By.xpath("//*[@id=\"interest_sectl\"]/div/span[10]")).getText();
-        System.out.println("书名:" + bookName + "\n" + socre + "\n" + number + "\n" + star_5 + "\n" + star_4 + "\n" + star_3 + "\n" + star_2 + "\n" + star_1);
-
-        //标签
-        System.out.println("======================标签=====================");
-        StringBuilder tagString = new StringBuilder();
-        List<WebElement> tags = webDriver.findElement(By.xpath("//*[@id=\"db-tags-section\"]/div")).findElements(By.tagName("span"));
-        tags.stream().forEach(tag -> {
-            tagString.append(tag.getText());
-        });
-        System.out.println(tagString.toString());
-        System.out.println("======================内容简介=====================");
-        try {
-            WebElement getBrief = webDriver.findElement(By.xpath("//*[@id=\"content\"]/div/div[1]/div[3]/div/span/div/p[6]"));
-
-            clickToElement(webDriver, getBrief);
-        } catch (NoSuchElementException e) {
-            System.out.println("没有找到展开全部的按钮!");
-        }
-        WebElement brief = webDriver.findElement(By.xpath("//*[@id=\"link-report\"]/span[2]/div/div"));
-        System.out.println(brief.getText());
-        System.out.println("======================作者简介=====================");
-        try {
-            WebElement authBrief = webDriver.findElement(By.xpath("//*[@id=\"content\"]/div/div[1]/div[3]/div[2]/span[1]/div/p[4]/a"));
-            clickToElement(webDriver, authBrief);
-        } catch (NoSuchElementException e) {
-            System.out.println("没有找到展开全部的按钮!");
-        }
-        WebElement authBrief = webDriver.findElement(By.xpath("//*[@id=\"content\"]/div/div[1]/div[3]/div[2]/span[2]"));
-        System.out.println(authBrief.getText());
-        //丛书信息
-        System.out.println("======================丛书信息=====================");
-        String information = webDriver.findElement(By.xpath("//*[@id=\"content\"]/div/div[1]/div[3]/div[5]/div")).getText();
-        System.out.println(information);
-
-        //喜欢相关书籍
-        System.out.println("======================喜欢“" + bookName + "”的人还喜欢=====================");
-        WebElement aboutBookContent = webDriver.findElement(By.xpath("//*[@id=\"db-rec-section\"]/div"));
-        List<WebElement> books = aboutBookContent.findElements(By.tagName("dl"));
-        for (int i = 1; i <= books.size(); i++) {
-            if (i == 6 || i == 12) {
+        for (int ii = 0; ii < wts.size(); ii++) {
+            TbWantongHuiben wt = wts.get(ii);
+            String isbn = wt.getIsbn();
+            //根据isbn获取豆瓣的详情页url
+            System.out.println("==========" + isbn);
+            String getIsbnUrl = "https://book.douban.com/subject_search?search_text=" + isbn;
+            WebDriver isbnWebDriver = new ChromeDriver();
+            isbnWebDriver.get(getIsbnUrl);
+            String url;
+            String commentsNumber;
+            String bookInformationCode;
+            try {
+                url = isbnWebDriver.findElement(By.xpath("//*[@id=\"root\"]//a[@class=\"cover-link\"]")).getAttribute("href");
+                String[] commentsNumbers = url.split("/");
+                bookInformationCode = commentsNumbers[commentsNumbers.length - 1];
+            } catch (Exception e) {
+                isbnWebDriver.close();
                 continue;
             }
-            WebElement book = books.get(i-1);
-            WebElement nameE = book.findElement(By.xpath("//*[@id=\"db-rec-section\"]/div/dl[" + i + "]/dd/a"));
-            WebElement imageE = book.findElement(By.xpath("//*[@id=\"db-rec-section\"]/div/dl[" + i + "]/dt/a/img"));
-            String name = nameE.getText();
-            String image = imageE.getAttribute("src");
-            System.out.println(name + "\n" + image);
-        }
-        System.out.println("======================借书=====================");
-        List<WebElement> jieshus = aboutBookContent.findElement(By.xpath("//*[@id=\"borrowinfo\"]/ul")).findElements(By.tagName("li"));
-        for (int i = 1; i <= jieshus.size(); i++) {
-            WebElement jieshu = jieshus.get(i - 1);
-            String name = jieshu.findElement(By.xpath("//*[@id=\"borrowinfo\"]/ul/li[" + i + "]/a")).getText();
-            String address = jieshu.findElement(By.xpath("//*[@id=\"borrowinfo\"]/ul/li[" + i + "]/a")).getAttribute("href");
-            System.out.println(name + "\n" + address);
-        }
+            isbnWebDriver.close();
+            WebDriver webDriver = new ChromeDriver();
+            webDriver.get(url);
+            // 书名、图片、作者、出版社等等信息
+            WebElement informationElement = webDriver.findElement(By.xpath("//*[@id=\"mainpic\"]/a"));
+            String smllPic = informationElement.getAttribute("href");
+            String bookName = informationElement.getAttribute("title");
+            String bigPic = informationElement.findElement(By.xpath(".//img")).getAttribute("src");
+            System.out.println(smllPic + "\n" + bookName + "\n" + bigPic);
+            //info 信息
+            WebElement infoElement = webDriver.findElement(By.xpath("//*[@id=\"info\"]"));
+            String infoString = infoElement.getText();
+            String[] infos = infoString.split("\n");
+            for (int i = 0; i < infos.length; i++) {
+                String[] ky = infos[i].split(": ");
+                System.out.println(ky[0] + "," + ky[1]);
+            }
+            //评分
+            String socre;
+            String number;
+            String star_5;
+            String star_4;
+            String star_3;
+            String star_2;
+            String star_1;
+            try {
+                socre = webDriver.findElement(By.xpath("//*[@id=\"interest_sectl\"]/div/div[2]/strong")).getText();
+                number = webDriver.findElement(By.xpath("//*[@id=\"interest_sectl\"]/div/div[2]/div/div[2]/span/a/span")).getText();
+                star_5 = webDriver.findElement(By.xpath("//*[@id=\"interest_sectl\"]/div/span[2]")).getText();
+                star_4 = webDriver.findElement(By.xpath("//*[@id=\"interest_sectl\"]/div/span[4]")).getText();
+                star_3 = webDriver.findElement(By.xpath("//*[@id=\"interest_sectl\"]/div/span[6]")).getText();
+                star_2 = webDriver.findElement(By.xpath("//*[@id=\"interest_sectl\"]/div/span[8]")).getText();
+                star_1 = webDriver.findElement(By.xpath("//*[@id=\"interest_sectl\"]/div/span[10]")).getText();
+            } catch (Exception e) {
+                socre = "暂无评分";
+                number = "评价人数不足";
+                star_5 = "暂无评价";
+                star_4 = "暂无评价";
+                star_3 = "暂无评价";
+                star_2 = "暂无评价";
+                star_1 = "暂无评价";
+            }
+            System.out.println(socre + "\n" + number + "\n" + star_5 + "\n" + star_4 + "\n" + star_3 + "\n" + star_2 + "\n" + star_1);
 
-//        //短评：重新打开一个页面，获取全部的信息
-//        System.out.println("======================短评=====================");
-//        String commentsNumber = webDriver.findElement(By.xpath("//*[@id=\"content\"]/div/div[1]/div[3]/div[8]/h2/span[2]/a")).getText();
-//        String regex = "全部 (.*) 条";
-//        Pattern pattern = Pattern.compile(regex);
-//        Matcher matcher = pattern.matcher(commentsNumber);//匹配类
-//        while (matcher.find()) {
-//            commentsNumber = matcher.group(1);
-//        }
-//        int page = (int) Math.ceil(Double.valueOf(commentsNumber) / 20);
-//
-//        for (int i=1;i<page;i++){
-//           String commentUrl="https://book.douban.com/subject/27608687/comments/hot?p="+i;
-//            WebDriver commentDriver=new ChromeDriver();
-//            commentDriver.get(commentUrl);
-//            List<WebElement> commentItems = commentDriver.findElement(By.xpath("//*[@id=\"comments\"]/ul")).findElements(By.tagName("li"));
-//            for (int j=1;j<commentItems.size();j++){
-//                  try {
-//                      String name = commentDriver.findElement(By.xpath("//*[@id=\"comments\"]/ul/li[" + j + "]/div[2]/h3/span[2]/a")).getText();
-//                      String icon=commentDriver.findElement(By.xpath("//*[@id=\"comments\"]/ul/li[" + j + "]/div[1]/a/img")).getAttribute("src");
-//                      String star=commentDriver.findElement(By.xpath("//*[@id=\"comments\"]/ul/li[" + j + "]/div[2]/h3/span[2]/span[1]")).getAttribute("title");
-//                      String time=commentDriver.findElement(By.xpath("//*[@id=\"comments\"]/ul/li["+j+"]/div[2]/h3/span[2]/span[2]")).getText();
-//                      String content=commentDriver.findElement(By.xpath("//*[@id=\"comments\"]/ul/li["+j+"]/div[2]/p/span")).getText();
-//                      String up=commentDriver.findElement(By.xpath("//*[@id=\"comments\"]/ul[1]/li["+j+"]/div[2]/h3/span[1]")).findElement(By.tagName("span")).getText();
-//                      System.out.println(name+"\n"+icon+"\n"+star+"\n"+time+"\n"+content+"\n"+up);
-//                      System.out.println("============");
-//                  }catch (Exception e){
-//
-//                  }
-//             }
-//            System.out.println("===================================現在是第"+i+"頁");
-//            commentDriver.close();
-//        }
-
-        //书评：重新打开一个页面，获取全部的信息
-        System.out.println("======================书评=====================");
-        String reviewsNumber = webDriver.findElement(By.xpath("//*[@id=\"content\"]/div/div[1]/div[3]/section/header/h2/span/a")).getText();
-        String reviewsrRegex = "全部 (.*) 条";
-        Pattern reviewsPattern = Pattern.compile(reviewsrRegex);
-        Matcher reviewsMatcher = reviewsPattern.matcher(reviewsNumber);//匹配类
-        while (reviewsMatcher.find()) {
-            reviewsNumber = reviewsMatcher.group(1);
-        }
-        int reviewsPage = (int) Math.ceil(Double.valueOf(reviewsNumber) / 20);
-        for (int i = 1; i <= reviewsPage; i++) {
-            int start = i * 10;
-            String reviewsUrl = "https://book.douban.com/subject/27608687/reviews?start=" + start;
-            WebDriver reviewsDriver = new ChromeDriver();
-            reviewsDriver.get(reviewsUrl);
-            List<WebElement> reviewList = reviewsDriver.findElement(By.xpath("//*[@id=\"content\"]/div/div[1]/div[1]"))
-                    .findElements(By.xpath("./child::div"));
-            for (int j = 1; j < reviewList.size(); j++) {
+            //标签
+            System.out.println("======================标签=====================");
+            StringBuilder tagString = new StringBuilder();
+            List<WebElement> tags = null;
+            try {
+                tags = webDriver.findElement(By.xpath("//*[@id=\"db-tags-section\"]/div")).findElements(By.tagName("span"));
+                tags.stream().forEach(tag -> {
+                    tagString.append(tag.getText());
+                });
+            } catch (Exception e) {
+                tagString.append("暂无标签");
+            }
+            System.out.println(tagString.toString());
+            System.out.println("======================内容简介=====================");
+            WebElement brief;
+            String briefText = "";
+            try {
+                WebElement getBrief = webDriver.findElement(By.xpath("//*[@id=\"link-report\"]//a"));
+                clickToElement(webDriver, getBrief);
+                brief = webDriver.findElement(By.xpath("//*[@id=\"link-report\"]/span[2]/div/div"));
+                briefText = brief.getText();
+            } catch (Exception e) {
+                System.out.println("没有找到展开全部的按钮!");
                 try {
-                    WebElement item = reviewList.get(j - 1);
-                    String icon = item.findElement(By.xpath(".//img")).getAttribute("src");
-                    String name = item.findElement(By.xpath(".//a[2]")).getText();
-                    String star = item.findElement(By.xpath(".//span[1]")).getAttribute("title");
-                    String time = item.findElement(By.xpath(".//span[2]")).getText();
-                    WebElement conten = item.findElement(By.xpath(".//div[1]/div[1]/div/div/a"));
-                    clickToElement(reviewsDriver, conten);
-                    Thread.sleep(5000);
-                    String contenString = item.findElement(By.xpath(".//*[@class=\"review-content clearfix\"]")).getText();
-                    System.out.println(icon + "\n" + name + "\n" + star + "\n" + time + "\n" + contenString);
-                    System.out.println("==================");
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    brief = webDriver.findElement(By.xpath("//*[@id=\"link-report\"]/div[1]/div"));
+                    briefText = brief.getText();
+                } catch (Exception e1) {
+                    brief = null;
                 }
             }
-            reviewsDriver.close();
-        }
+            if (brief == null) {
+                briefText = "没有简介！";
+            }
+            System.out.println(briefText);
+            System.out.println("======================作者简介=====================");
+            WebElement authBrief;
+            String authBriefContent;
+            try {
+                WebElement authBriefBtn = webDriver.findElement(By.xpath("//*[@id=\"content\"]/div/div[1]/div[3]/div[2]//a"));
+                clickToElement(webDriver, authBriefBtn);
+                authBrief = webDriver.findElement(By.xpath("//*[@id=\"content\"]/div/div[1]/div[3]/div[2]/span[2]"));
+                authBriefContent = authBrief.getText();
+            } catch (Exception e) {
 
-        System.out.println("======================购买链接=====================");
-        //购买链接：重新打开一个页面，获取全部的信息
-        String payLinkUrl = "https://book.douban.com/subject/27608687/buylinks";
-        String commentsUrl = "https://book.douban.com/subject/27608687/comments/hot";
-        WebDriver commentsWebDriver = new ChromeDriver();
-        commentsWebDriver.get(commentsUrl);
-        WebDriver payLinWebDriver = new ChromeDriver();
-        payLinWebDriver.get(payLinkUrl);
-        WebElement payLinksTable = payLinWebDriver.findElement(By.xpath("//*[@id=\"buylink-table\"]/tbody"));
-        List<WebElement> payLinks = payLinksTable.findElements(By.tagName("tr"));
-        for (int i = 2; i <= payLinks.size(); i++) {
-            WebElement payLink = payLinks.get(i - 1);
-            String icon = payLink.findElement(By.xpath("//*[@id=\"buylink-table\"]/tbody/tr[" + i + "]/td[1]/img")).getAttribute("src");
-            String link = payLink.findElement(By.xpath("//*[@id=\"buylink-table\"]/tbody/tr[" + i + "]/td[2]/a")).getAttribute("href");
-            String name = payLink.findElement(By.xpath("//*[@id=\"buylink-table\"]/tbody/tr[" + i + "]/td[2]/a")).getText();
-            String price = payLink.findElement(By.xpath("//*[@id=\"buylink-table\"]/tbody/tr[" + i + "]/td[3]/a")).getText();
-            String jiesheng = payLink.findElement(By.xpath("//*[@id=\"buylink-table\"]/tbody/tr[" + i + "]/td[4]")).getText();
-            String mianyou = payLink.findElement(By.xpath("//*[@id=\"buylink-table\"]/tbody/tr[" + i + "]/td[5]/span")).getText();
-            System.out.println(icon + "\n" + link + "\n" + name + "\n" + price + "\n" + jiesheng + "\n" + mianyou);
-        }
-        payLinWebDriver.close();
+                try {
+                    authBrief = webDriver.findElement(By.xpath("//*[@id=\"content\"]/div/div[1]/div[3]/div[2]/div/div/p"));
+                    authBriefContent = authBrief.getText();
+                } catch (Exception e1) {
+                    System.out.println("不存在作者简介!");
+                    authBriefContent = "";
+                }
+            }
+            System.out.println(authBriefContent);
+            //丛书信息
+            System.out.println("======================丛书信息=====================");
+            try {
+                String seriesBookcontent;
+                WebElement seriesBook = webDriver.findElement(By.xpath("//*[@id=\"content\"]/div/div[1]/div[3]/div[5]"));
+                String seriesBooktitle = seriesBook.findElement(By.xpath("./h2")).getText();
+                if (StringUtils.equals("丛书信息", seriesBooktitle)) {
+                    seriesBookcontent = seriesBook.findElement(By.xpath("./div")).getText();
+                } else {
+                    seriesBookcontent = "没有丛书信息";
+                }
+                System.out.println(seriesBookcontent);
+            } catch (Exception e) {
+                System.out.println("不存在丛书信息!");
+            }
 
+            //喜欢相关书籍
+            System.out.println("======================喜欢“" + bookName + "”的人还喜欢=====================");
+            try {
+                WebElement aboutBookContent = webDriver.findElement(By.xpath("//*[@id=\"db-rec-section\"]/div"));
+                List<WebElement> books = aboutBookContent.findElements(By.tagName("dl"));
+                for (int i = 1; i <= books.size(); i++) {
+                    if (i == 6 || i == 12) {
+                        continue;
+                    }
+                    WebElement book = books.get(i - 1);
+                    WebElement nameE = book.findElement(By.xpath("//*[@id=\"db-rec-section\"]/div/dl[" + i + "]/dd/a"));
+                    WebElement imageE = book.findElement(By.xpath("//*[@id=\"db-rec-section\"]/div/dl[" + i + "]/dt/a/img"));
+                    String name = nameE.getText();
+                    String image = imageE.getAttribute("src");
+                    System.out.println(name + "\n" + image);
+                }
+            } catch (Exception e) {
+                System.out.println("没有找到相关的书!");
+            }
+
+//        System.out.println("======================借书=====================");
+//        List<WebElement> jieshus = aboutBookContent.findElement(By.xpath("//*[@id=\"borrowinfo\"]/ul")).findElements(By.tagName("li"));
+//        for (int i = 1; i <= jieshus.size(); i++) {
+//            WebElement jieshu = jieshus.get(i - 1);
+//            String name = jieshu.findElement(By.xpath("//*[@id=\"borrowinfo\"]/ul/li[" + i + "]/a")).getText();
+//            String address = jieshu.findElement(By.xpath("//*[@id=\"borrowinfo\"]/ul/li[" + i + "]/a")).getAttribute("href");
+//            System.out.println(name + "\n" + address);
+//        }
+
+            //短评：重新打开一个页面，获取全部的信息
+            System.out.println("======================短评=====================");
+            try {
+                commentsNumber = webDriver.findElement(By.xpath("//*[@id=\"content\"]/div/div[1]/div[3]/div[7]//span[@class=\"pl\"]/a")).getText();
+            } catch (Exception e) {
+                try {
+                    commentsNumber = webDriver.findElement(By.xpath("//*[@id=\"content\"]/div/div[1]/div[3]/div[6]//span[@class=\"pl\"]/a")).getText();
+                } catch (Exception e1) {
+                    try {
+                        commentsNumber = webDriver.findElement(By.xpath("//*[@id=\"content\"]/div/div[1]/div[3]/div[8]/h2/span[2]/a")).getText();
+                    } catch (Exception e2) {
+                        commentsNumber = "";
+                    }
+
+                }
+            }
+            if (!StringUtils.isEmpty(commentsNumber)) {
+                String regex = "全部 (.*) 条";
+                Pattern pattern = Pattern.compile(regex);
+                Matcher matcher = pattern.matcher(commentsNumber);//匹配类
+                while (matcher.find()) {
+                    commentsNumber = matcher.group(1);
+                }
+                System.out.println("=======短评====" + commentsNumber + "条");
+                int page = (int) Math.ceil(Double.valueOf(commentsNumber) / 20);
+
+                for (int i = 1; i <= page; i++) {
+                    String commentUrl = "https://book.douban.com/subject/" + bookInformationCode + "/comments/hot?p=" + i;
+                    WebDriver commentDriver = new ChromeDriver();
+                    commentDriver.get(commentUrl);
+                    List<WebElement> commentItems = commentDriver.findElement(By.xpath("//*[@id=\"comments\"]/ul")).findElements(By.tagName("li"));
+                    for (int j = 1; j < commentItems.size(); j++) {
+                        try {
+                            String name = commentDriver.findElement(By.xpath("//*[@id=\"comments\"]/ul/li[" + j + "]/div[2]/h3/span[2]/a")).getText();
+                            String icon = commentDriver.findElement(By.xpath("//*[@id=\"comments\"]/ul/li[" + j + "]/div[1]/a/img")).getAttribute("src");
+                            String star = commentDriver.findElement(By.xpath("//*[@id=\"comments\"]/ul/li[" + j + "]/div[2]/h3/span[2]/span[1]")).getAttribute("title");
+                            String time = commentDriver.findElement(By.xpath("//*[@id=\"comments\"]/ul/li[" + j + "]/div[2]/h3/span[2]/span[2]")).getText();
+                            String content = commentDriver.findElement(By.xpath("//*[@id=\"comments\"]/ul/li[" + j + "]/div[2]/p/span")).getText();
+                            String up = commentDriver.findElement(By.xpath("//*[@id=\"comments\"]/ul[1]/li[" + j + "]/div[2]/h3/span[1]")).findElement(By.tagName("span")).getText();
+                            System.out.println(name + "\n" + icon + "\n" + star + "\n" + time + "\n" + content + "\n" + up);
+                        } catch (Exception e) {
+
+                        }
+                    }
+                    System.out.println("===================================現在是第" + i + "頁");
+                    commentDriver.close();
+                }
+            } else {
+                System.out.println("没有找到短评信息！！");
+            }
+
+
+            //书评：重新打开一个页面，获取全部的信息
+            System.out.println("======================书评=====================");
+            try {
+                String reviewsNumber = webDriver.findElement(By.xpath("//*[@id=\"content\"]/div/div[1]/div[3]/section/header/h2/span/a")).getText();
+                String reviewsrRegex = "全部 (.*) 条";
+                Pattern reviewsPattern = Pattern.compile(reviewsrRegex);
+                Matcher reviewsMatcher = reviewsPattern.matcher(reviewsNumber);//匹配类
+                while (reviewsMatcher.find()) {
+                    reviewsNumber = reviewsMatcher.group(1);
+                }
+                int reviewsPage = (int) Math.ceil(Double.valueOf(reviewsNumber) / 20);
+                for (int i = 1; i <= reviewsPage; i++) {
+                    int start = i * 10;
+                    String reviewsUrl;
+                    if (i == 1) {
+                        reviewsUrl = "https://book.douban.com/subject/" + bookInformationCode + "/reviews?start=";
+                    } else {
+                        reviewsUrl = "https://book.douban.com/subject/" + bookInformationCode + "/reviews?start=" + start;
+                    }
+
+                    WebDriver reviewsDriver = new ChromeDriver();
+                    reviewsDriver.get(reviewsUrl);
+                    List<WebElement> reviewList = reviewsDriver.findElement(By.xpath("//*[@id=\"content\"]/div/div[1]/div[1]"))
+                            .findElements(By.xpath("./child::div"));
+                    for (int j = 1; j <= reviewList.size(); j++) {
+                        try {
+                            WebElement item = reviewList.get(j - 1);
+
+                            WebElement titleElment = item.findElement(By.xpath(".//h2/a"));
+                            String title = titleElment.getText();
+                            String href = titleElment.getAttribute("href");
+                            WebDriver itemWeb = new ChromeDriver();
+                            itemWeb.get(href);
+                            WebElement mainElment = itemWeb.findElement(By.xpath("//*[@class=\"article\"]//div[@class=\"main\"]"));
+                            String icon = mainElment.findElement(By.xpath("./a")).getAttribute("href");
+                            String name = mainElment.findElement(By.xpath("./header/a[1]/span")).getText();
+                            String star = mainElment.findElement(By.xpath("./header/span[1]")).getAttribute("title");
+                            String time = mainElment.findElement(By.xpath("./header/span[3]")).getText();
+                            String contenString = mainElment.findElement(By.xpath(".//div[@id=\"link-report\"]/div")).getText();
+                            String youYong = mainElment.findElement(By.xpath(".//button[1]")).getText();
+                            String meiYong = mainElment.findElement(By.xpath(".//button[2]")).getText();
+                            itemWeb.close();
+                            System.out.println(icon + "\n" + name + "\n" + star + "\n" + time + "\n" + "\n" + youYong + "\n" + meiYong + "\n" + title + "\n" + contenString);
+                            System.out.println("=====================================");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    reviewsDriver.close();
+                }
+            } catch (Exception e) {
+                System.out.println("没有书评信息！！");
+            }
+            System.out.println("======================购买链接=====================");
+            //购买链接：重新打开一个页面，获取全部的信息
+            String payLinkUrl = "https://book.douban.com/subject/" + bookInformationCode + "/buylinks";
+            WebDriver payLinWebDriver = new ChromeDriver();
+            payLinWebDriver.get(payLinkUrl);
+            WebElement payLinksTable = null;
+            try {
+                payLinksTable = payLinWebDriver.findElement(By.xpath("//*[@id=\"buylink-table\"]/tbody"));
+                List<WebElement> payLinks = payLinksTable.findElements(By.tagName("tr"));
+                for (int i = 2; i <= payLinks.size(); i++) {
+                    WebElement payLink = payLinks.get(i - 1);
+                    String icon = payLink.findElement(By.xpath("//*[@id=\"buylink-table\"]/tbody/tr[" + i + "]/td[1]/img")).getAttribute("src");
+                    String link = payLink.findElement(By.xpath("//*[@id=\"buylink-table\"]/tbody/tr[" + i + "]/td[2]/a")).getAttribute("href");
+                    String name = payLink.findElement(By.xpath("//*[@id=\"buylink-table\"]/tbody/tr[" + i + "]/td[2]/a")).getText();
+                    String price = payLink.findElement(By.xpath("//*[@id=\"buylink-table\"]/tbody/tr[" + i + "]/td[3]/a")).getText();
+                    String jiesheng = payLink.findElement(By.xpath("//*[@id=\"buylink-table\"]/tbody/tr[" + i + "]/td[4]")).getText();
+                    String mianyou = payLink.findElement(By.xpath("//*[@id=\"buylink-table\"]/tbody/tr[" + i + "]/td[5]/span")).getText();
+                    System.out.println(icon + "\n" + link + "\n" + name + "\n" + price + "\n" + jiesheng + "\n" + mianyou);
+                }
+            } catch (Exception e) {
+                System.out.println("没有找到购买链接！！");
+            }
+            payLinWebDriver.close();
+            webDriver.close();
+        }
     }
 
     @Test
@@ -719,6 +857,14 @@ public class MiguMusicApplicationTests {
             }
         }
 
+    }
+
+    @Test
+    public void test() {
+        String[] ss = "https://book.douban.com/subject/25845709/".split("/");
+        Arrays.asList(ss).stream().forEach(s -> {
+            System.out.println(s + "\n");
+        });
     }
 
 
