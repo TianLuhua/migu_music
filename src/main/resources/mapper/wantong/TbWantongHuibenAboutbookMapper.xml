@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.booyue.migu.dao.wantong.TbWantongHuibenAboutbookMapper">
+  <resultMap id="BaseResultMap" type="com.booyue.migu.entity.wantong.TbWantongHuibenAboutbook">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="origin_id" jdbcType="INTEGER" property="originId" />
+    <result column="book_name" jdbcType="VARCHAR" property="bookName" />
+    <result column="book_pic" jdbcType="VARCHAR" property="bookPic" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="origin_book_id" jdbcType="INTEGER" property="originBookId" />
+    <result column="origin_isbn" jdbcType="VARCHAR" property="originIsbn" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, origin_id, book_name, book_pic, `status`, origin_book_id, origin_isbn
+  </sql>
+  <select id="selectByExample" parameterType="com.booyue.migu.entity.wantong.TbWantongHuibenAboutbookExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from tb_wantong_huiben_aboutbook
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_wantong_huiben_aboutbook
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tb_wantong_huiben_aboutbook
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.booyue.migu.entity.wantong.TbWantongHuibenAboutbookExample">
+    delete from tb_wantong_huiben_aboutbook
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.booyue.migu.entity.wantong.TbWantongHuibenAboutbook" useGeneratedKeys="true">
+    insert into tb_wantong_huiben_aboutbook (origin_id, book_name, book_pic, 
+      `status`, origin_book_id, origin_isbn
+      )
+    values (#{originId,jdbcType=INTEGER}, #{bookName,jdbcType=VARCHAR}, #{bookPic,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{originBookId,jdbcType=INTEGER}, #{originIsbn,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.booyue.migu.entity.wantong.TbWantongHuibenAboutbook" useGeneratedKeys="true">
+    insert into tb_wantong_huiben_aboutbook
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="originId != null">
+        origin_id,
+      </if>
+      <if test="bookName != null">
+        book_name,
+      </if>
+      <if test="bookPic != null">
+        book_pic,
+      </if>
+      <if test="status != null">
+        `status`,
+      </if>
+      <if test="originBookId != null">
+        origin_book_id,
+      </if>
+      <if test="originIsbn != null">
+        origin_isbn,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="originId != null">
+        #{originId,jdbcType=INTEGER},
+      </if>
+      <if test="bookName != null">
+        #{bookName,jdbcType=VARCHAR},
+      </if>
+      <if test="bookPic != null">
+        #{bookPic,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="originBookId != null">
+        #{originBookId,jdbcType=INTEGER},
+      </if>
+      <if test="originIsbn != null">
+        #{originIsbn,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.booyue.migu.entity.wantong.TbWantongHuibenAboutbookExample" resultType="java.lang.Long">
+    select count(*) from tb_wantong_huiben_aboutbook
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update tb_wantong_huiben_aboutbook
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.originId != null">
+        origin_id = #{record.originId,jdbcType=INTEGER},
+      </if>
+      <if test="record.bookName != null">
+        book_name = #{record.bookName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bookPic != null">
+        book_pic = #{record.bookPic,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null">
+        `status` = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.originBookId != null">
+        origin_book_id = #{record.originBookId,jdbcType=INTEGER},
+      </if>
+      <if test="record.originIsbn != null">
+        origin_isbn = #{record.originIsbn,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update tb_wantong_huiben_aboutbook
+    set id = #{record.id,jdbcType=INTEGER},
+      origin_id = #{record.originId,jdbcType=INTEGER},
+      book_name = #{record.bookName,jdbcType=VARCHAR},
+      book_pic = #{record.bookPic,jdbcType=VARCHAR},
+      `status` = #{record.status,jdbcType=INTEGER},
+      origin_book_id = #{record.originBookId,jdbcType=INTEGER},
+      origin_isbn = #{record.originIsbn,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.booyue.migu.entity.wantong.TbWantongHuibenAboutbook">
+    update tb_wantong_huiben_aboutbook
+    <set>
+      <if test="originId != null">
+        origin_id = #{originId,jdbcType=INTEGER},
+      </if>
+      <if test="bookName != null">
+        book_name = #{bookName,jdbcType=VARCHAR},
+      </if>
+      <if test="bookPic != null">
+        book_pic = #{bookPic,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        `status` = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="originBookId != null">
+        origin_book_id = #{originBookId,jdbcType=INTEGER},
+      </if>
+      <if test="originIsbn != null">
+        origin_isbn = #{originIsbn,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.booyue.migu.entity.wantong.TbWantongHuibenAboutbook">
+    update tb_wantong_huiben_aboutbook
+    set origin_id = #{originId,jdbcType=INTEGER},
+      book_name = #{bookName,jdbcType=VARCHAR},
+      book_pic = #{bookPic,jdbcType=VARCHAR},
+      `status` = #{status,jdbcType=INTEGER},
+      origin_book_id = #{originBookId,jdbcType=INTEGER},
+      origin_isbn = #{originIsbn,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
