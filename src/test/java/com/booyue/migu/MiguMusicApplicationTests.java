@@ -7,6 +7,11 @@ import com.booyue.migu.dao.wantong.*;
 import com.booyue.migu.entity.*;
 import com.booyue.migu.entity.wantong.*;
 import com.booyue.migu.utils.FileUtils;
+import com.jd.open.api.sdk.DefaultJdClient;
+import com.jd.open.api.sdk.JdClient;
+import com.jd.open.api.sdk.JdException;
+import jd.union.open.promotion.common.get.request.UnionOpenPromotionCommonGetRequest;
+import jd.union.open.promotion.common.get.response.UnionOpenPromotionCommonGetResponse;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
@@ -24,13 +29,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static javax.swing.text.html.CSS.getAttribute;
 
 
 @RunWith(SpringRunner.class)
@@ -244,7 +245,7 @@ public class MiguMusicApplicationTests {
 //            System.out.println("=========绘本借阅次数=======");
             getHuiBenBorrowNum(webDriver, huiben.getName(), huiben.getId());
         });
-        webDriver.close();
+        webDriver.quit();
     }
 
     private void getHuiBenBorrowNum(WebDriver webDriver, String huibenName, Integer specialId) {
@@ -315,11 +316,10 @@ public class MiguMusicApplicationTests {
     @Autowired
     private TbWantongHuibenShortCommentsMapper shortCommentsMapper;
 
-    @Autowired
     @Test
     public void getMoreInformationFromDoubanByIsbn() {
         TbWantongHuibenExample wantongHuibenExample = new TbWantongHuibenExample();
-        wantongHuibenExample.createCriteria().andIsbnIsNotNull().andIsbnNotEqualTo("0000000000000");
+        wantongHuibenExample.createCriteria().andIsbnIsNotNull().andIsbnNotEqualTo("0000000000000").andIdGreaterThan(4900);
         int count = tbWantongHuibenMapper.countByExample(wantongHuibenExample);
         int pageSize = 10;
         int pageIndex = (int) Math.ceil(count / 100);
@@ -327,7 +327,8 @@ public class MiguMusicApplicationTests {
             wantongHuibenExample.setLimit(pageSize);
             wantongHuibenExample.setOffset(iii*pageSize);
             List<TbWantongHuiben> wts = tbWantongHuibenMapper.selectByExample(wantongHuibenExample);
-            System.getProperties().setProperty("webdriver.chrome.driver", "E:\\chromedriver\\chromedriver_x64.exe");
+//            System.getProperties().setProperty("webdriver.chrome.driver", "E:\\chromedriver\\chromedriver_x64.exe");
+            System.getProperties().setProperty("webdriver.chrome.driver", "E:\\chromedriver\\chromedriver.exe");
             for (int ii = 0; ii < wts.size(); ii++) {
                 TbWantongHuiben wt = wts.get(ii);
                 String isbn = wt.getIsbn();
@@ -348,16 +349,23 @@ public class MiguMusicApplicationTests {
                     String[] commentsNumbers = url.split("/");
                     bookInformationCode = commentsNumbers[commentsNumbers.length - 1];
                 } catch (Exception e) {
-                    isbnWebDriver.close();
+                    isbnWebDriver.quit();
                     continue;
                 }
-                isbnWebDriver.close();
+                isbnWebDriver.quit();
                 WebDriver webDriver = new ChromeDriver();
                 webDriver.get(url);
                 // 书名、图片、作者、出版社等等信息
                 WebElement informationElement = webDriver.findElement(By.xpath("//*[@id=\"mainpic\"]/a"));
                 String smllPic = informationElement.getAttribute("href");
-                String bookName = informationElement.getAttribute("title");
+                String bookName;
+                try {
+                     bookName = webDriver.findElement(By.xpath("//*[@id=\"wrapper\"]/h1/span")).getText();
+                }catch (Exception e){
+                    webDriver.quit();
+                    continue;
+                }
+
                 String bigPic = informationElement.findElement(By.xpath(".//img")).getAttribute("src");
                 System.out.println(smllPic + "\n" + bookName + "\n" + bigPic);
                 //info 信息
@@ -634,7 +642,7 @@ public class MiguMusicApplicationTests {
                             }
                         }
                         System.out.println("===================================現在是第" + i + "頁");
-                        commentDriver.close();
+                        commentDriver.quit();
                     }
                 } else {
                     System.out.println("没有找到短评信息！！");
@@ -698,14 +706,14 @@ public class MiguMusicApplicationTests {
                                 } else {
                                     System.out.println("书评:" + name + "，插入失败！");
                                 }
-                                itemWeb.close();
+                                itemWeb.quit();
                                 System.out.println(icon + "\n" + name + "\n" + star + "\n" + time + "\n" + "\n" + youYong + "\n" + meiYong + "\n" + title + "\n" + contenString);
                                 System.out.println("=====================================");
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
-                        reviewsDriver.close();
+                        reviewsDriver.quit();
                     }
                 } catch (Exception e) {
                     System.out.println("没有书评信息！！");
@@ -748,8 +756,8 @@ public class MiguMusicApplicationTests {
                     System.out.println(e.getMessage());
                     System.out.println("没有找到购买链接！！");
                 }
-                payLinWebDriver.close();
-                webDriver.close();
+                payLinWebDriver.quit();
+                webDriver.quit();
             }
         }
     }
@@ -842,10 +850,10 @@ public class MiguMusicApplicationTests {
             tbHainanHuiben.setJdComment(haopingTxt);
             hainanHuibenMapper.insert(tbHainanHuiben);
 
-            detilsWebDriver.close();
+            detilsWebDriver.quit();
             System.out.println("=============================");
         });
-        webDriver.close();
+        webDriver.quit();
     }
 
 
@@ -871,63 +879,9 @@ public class MiguMusicApplicationTests {
         builder.click(item).perform();
     }
 
-    /**
-     * 获取 年龄段的数组：比如："4-6岁"  获得："4-5岁,5-6岁"
-     *
-     * @param ageStr
-     * @return
-     */
-    public static String getAges(String ageStr) {
-        ageStr = ageStr.replace("岁", "");
-        String[] items = ageStr.split("-");
-        List<Integer> ageArr = new ArrayList<>();
-        int fAge = Integer.valueOf(items[0]);
-        int eAge = Integer.valueOf(items[1]);
-        if (eAge > fAge && eAge - fAge == 1) {
-            return ageStr + "岁";
-        }
-        ageArr.add(fAge);
-        while (fAge < eAge) {
-            fAge++;
-            ageArr.add(fAge);
-        }
-        StringBuilder result = new StringBuilder();
-        if (ageArr.size() >= 2) {
-            for (int i : ageArr) {
-                if (i == ageArr.get(ageArr.size() - 1)) {
-                    break;
-                }
-                result.append(i);
-                result.append("-");
-                result.append(++i);
-                result.append("岁");
-                result.append(",");
-            }
-
-            return result.toString();
-        }
-        return null;
-    }
 
     @Test
-    public void getWanTongBookIdByISBN() {
-        String wantongSreachUrl = "cloud-api1.51wanxue.com/api-cloud/book/searchBaseBook";
-        TbHainanHuibenExample tbHainanHuibenExample = new TbHainanHuibenExample();
-        tbHainanHuibenExample.createCriteria().andIdIsNotNull();
-        List<TbHainanHuiben> huibens = hainanHuibenMapper.selectByExample(tbHainanHuibenExample);
-
-//        {
-//                "isbn":"1234567890"
-//        }
-
-//        {
-//            "appKey": "3f8a6cffce6b45a5a7358ed2db633ec9",
-//            "appSecret": "cc558536650f4652b9720504a4d3f77f"
-//        }
-        huibens.stream().forEach(huiben -> {
-
-
-        });
+    public void getWanTongUserToken() {
         String url = "http://cloud-api1.51wanxue.com/api-cloud/auth/login";
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("appKey", "3f8a6cffce6b45a5a7358ed2db633ec9");
@@ -1008,13 +962,27 @@ public class MiguMusicApplicationTests {
 
     }
 
-    @Test
-    public void test() {
-        String[] ss = "https://book.douban.com/subject/25845709/".split("/");
-        Arrays.asList(ss).stream().forEach(s -> {
-            System.out.println(s + "\n");
-        });
+
+    public  void getJDLink(){
+        String SERVER_URL = "https://router.jd.com/api";
+        String appKey = "your appkey";
+        String appSecret ="your secret";
+        String accessToken = "";
+        JdClient client=new DefaultJdClient(SERVER_URL,accessToken,appKey,appSecret);
+        UnionOpenPromotionCommonGetRequest request = new UnionOpenPromotionCommonGetRequest();
+        jd.union.open.promotion.common.get.request.PromotionCodeReq promotionCodeReq = new jd.union.open.promotion.common.get.request.PromotionCodeReq();
+        promotionCodeReq.setMaterialId("https://item.jd.com/23484023378.html");
+        promotionCodeReq.setSiteId("51706106");
+
+        request.setPromotionCodeReq(promotionCodeReq);
+        try {
+            UnionOpenPromotionCommonGetResponse response = client.execute(request);
+            System.out.println(response.getData().getClickURL());
+        } catch (JdException e) {
+            e.printStackTrace();
+        }
     }
+
 
 
 }
